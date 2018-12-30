@@ -3,3 +3,6 @@ numpy
 matplotlib
 scikit-learn
 matplotlib
+opencv-python
+scikit-image
+scipy

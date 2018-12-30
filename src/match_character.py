@@ -1,6 +1,7 @@
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
 
+
 def fn_match_character(eq_chars, X_orig, chars, n_nb = 1):
     knn_search = NearestNeighbors(n_neighbors=n_nb, metric='cityblock')
     knn_search.fit(X_orig[:, :-1])

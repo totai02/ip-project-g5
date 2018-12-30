@@ -148,7 +148,7 @@ def fn_assemble_eq(chars):
 
             eq_string += detected
 
-        elif num_overlaps == 0:
+        elif num_overlaps == 1:
             assert overlap_idx[i + 1]
 
             overlap_ul = boxes[0, i + 1]
