@@ -52,7 +52,7 @@ def create_char_id(char_binary):
     y = char_img_inv.shape[0] - 1
     x = char_img_inv.shape[1] - 1
     dr = np.max([x - cent_x, cent_x, y - cent_y, cent_y]) / (k + 1)
-    print(dr)
+
     [c, r] = np.meshgrid(np.arange(0, x+1, 1), np.arange(0, y+1, 1))
 
     for i in range(1, k+1):
@@ -72,9 +72,6 @@ def create_char_id(char_binary):
             # create matrix linear indices, corresponding x and y values
             c_cidx = c[cidx_idx[0], cidx_idx[1]]
             r_cidx = r[cidx_idx[0], cidx_idx[1]]
-            cidx = np.array([cidx_row, cidx_col])
-
-            cidx_flat = cidx_row * C.shape[1] + cidx_col
 
             # create matrix indices
             vals = np.vstack((cidx_idx[0], cidx_idx[1], c_cidx - cent_x, r_cidx - cent_y))
@@ -87,9 +84,6 @@ def create_char_id(char_binary):
             sortedvals = vals[:, order]
 
             circ_vec = char_binary[sortedvals[0].astype(int), sortedvals[1].astype(int)]
-
-            # cv2.imshow('img'+str(i), circ_vec)
-            # cv2.waitKey(0)
 
             # morphology filling
             kernel = np.ones((2, 1), np.uint8)
@@ -104,7 +98,7 @@ def create_char_id(char_binary):
             strcntVec = ''.join(str(e) for e in cntVec)
             strPattern = '00'
             cnt = [i for i in range(len(strcntVec)) if strcntVec.startswith(strPattern, i)]
-            if cnt == []:
+            if not cnt:
                 count = 0
             else:
                 a = np.diff([1] + cnt)
@@ -122,9 +116,6 @@ def create_char_id(char_binary):
             # Save count to identifier vector
             char_id[:, i] = coding_count[i]
 
-            # cv2.imshow('img'+str(i), circ_vec)
-            # cv2.waitKey(0)
-
             # Find 2 longest arcs of background and divide diff by total length
             # If 1s (background) wrap around, move all 1s to one side
             circ = len(circ_vec)
@@ -138,7 +129,6 @@ def create_char_id(char_binary):
                 else:
                     idx = idx[:, 0][-1]
                     circ_vec = np.vstack((circ_vec[idx::], circ_vec[0:idx]))
-                    # circ_vec = [circ_vec[(idx + 1)::]] + circ_vec[0:idx]
                     # Vector of length of each section of 1s
                     # Pad with 0s for diff
                     B = np.vstack((0, np.array(circ_vec), 0))
@@ -146,7 +136,6 @@ def create_char_id(char_binary):
                 B = np.vstack((0, np.array(circ_vec), 0))
             B = np.array(B).T
             bgrd_len = np.array(np.where(np.diff(B) == -1)) - np.array(np.where(np.diff(B) == 1))
-            # bgrd_len = find(diff(B) == -1) - find(diff(B) == 1);
 
             # If no crossing, set ratio to 0
             if coding_count[i] < 1:
@@ -156,9 +145,6 @@ def create_char_id(char_binary):
                 # Get 2 longest sections (arcs)
                 d2 = bgrd_len[1, :].max()
                 d2_get_max = np.array(np.where(bgrd_len == d2))
-                # idx_d2 = int(d2_get_max[1])
-                # [d2, idx_d2] = np.max(bgrd_len[1, :])
-                # bgrd_len[1, idx_d2] = -1
                 bgrd_len[d2_get_max[0], d2_get_max[1]] = -1
                 d1 = np.max(bgrd_len[1, :])
 
@@ -172,15 +158,13 @@ def create_char_id(char_binary):
             c = 0
 
     # Hu invariant moment
-    char_hu_moment = cv2.HuMoments(char_moment)
-    char_id[:, 2*k::] = char_hu_moment[1::].T
+    # char_hu_moment = cv2.HuMoments(char_moment)
+    char_hu_moment = hu_moments.cal_hu_moments(char_img_inv)
+    char_id[:, 2*k::] = char_hu_moment
 
-    # print(char_id)
-    # a = hu_moments.cal_hm(char_img_inv)
-    # print(a)
-    # print(char_hu_moment)
+    print(char_id)
     sio.savemat('./char_identifier.mat', {'identifier': char_id})
 
 
-img = cv2.imread('./Segment/seg1.jpg', -1)
+img = cv2.imread('seg2.jpg', -1)
 create_char_id(img)
