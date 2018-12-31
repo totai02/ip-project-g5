@@ -1,9 +1,7 @@
 import numpy as np
 import cv2
-import hu_moments
-from skimage import morphology as skimorph
 import scipy.io as sio
-import coordinateHelper as coor
+import src.coordinateHelper as coor
 
 
 def create_char_id(char_binary):
@@ -52,7 +50,6 @@ def create_char_id(char_binary):
     y = char_img_inv.shape[0] - 1
     x = char_img_inv.shape[1] - 1
     dr = np.max([x - cent_x, cent_x, y - cent_y, cent_y]) / (k + 1)
-    print(dr)
     [c, r] = np.meshgrid(np.arange(0, x+1, 1), np.arange(0, y+1, 1))
 
     for i in range(1, k+1):
@@ -175,12 +172,4 @@ def create_char_id(char_binary):
     char_hu_moment = cv2.HuMoments(char_moment)
     char_id[:, 2*k::] = char_hu_moment[1::].T
 
-    # print(char_id)
-    # a = hu_moments.cal_hm(char_img_inv)
-    # print(a)
-    # print(char_hu_moment)
-    sio.savemat('./char_identifier.mat', {'identifier': char_id})
-
-
-img = cv2.imread('./Segment/seg1.jpg', -1)
-create_char_id(img)
+    return char_id
