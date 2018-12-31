@@ -3,7 +3,7 @@ import cv2
 
 
 def central_moments(img_binary, order):
-    # img_binary: object/foreground = 1
+    # img_binary: object/foreground = 0 (chu trang tren nen den)
 
     # centroid
     moments = cv2.moments(img_binary)
@@ -48,4 +48,3 @@ def cal_hu_moments(img_binary):
            n_30_sub_12 * n_21_add_03 * (3 * n_30_add_12 ** 2 - n_21_add_03 ** 2)
 
     return hu_2, hu_3, hu_4, hu_5, hu_6, hu_7
-
