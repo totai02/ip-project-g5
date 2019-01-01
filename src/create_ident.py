@@ -1,5 +1,4 @@
-from skimage import measure, morphology
-from scipy import stats
+from skimage import morphology
 import numpy as np
 import cv2
 
@@ -61,9 +60,10 @@ def fn_create_ident(char):
             circ_vec = char[sortedvals[0].astype(int), sortedvals[1].astype(int)]
 
             circ_vec = morphology.binary_opening(circ_vec, np.ones(2))
+            circ_vec = morphology.binary_closing(circ_vec, np.ones(2))
 
             if sum(circ_vec) != 0:
-                cnt = str_find(np.hstack((1, 1, circ_vec)), np.array([0, 0]))
+                cnt = str_find(np.hstack((np.ones(3), circ_vec)), np.array([0, 0]))
                 count = sum(np.diff(np.hstack((1, cnt))) != 1)
 
                 identifier[i + 1] = count
@@ -85,7 +85,7 @@ def fn_create_ident(char):
                 else:
                     d2 = np.max(bgrd_len)
                     idx_d2 = np.argmax(bgrd_len)
-                    bgrd_len = np.delete(bgrd_len, idx_d2)
+                    bgrd_len[0, idx_d2] = 0
                     d1 = np.max(bgrd_len)
 
                 ratio = (d2 - d1) / circ
