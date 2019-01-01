@@ -1,7 +1,6 @@
 import numpy as np
 from skimage import morphology, measure
 from scipy.spatial import ConvexHull
-import cv2
 
 Character = np.dtype([('centroid', 'O'), ('boundingbox', 'O'), ('img', 'O'), ('ident', 'O'), ('char', 'O')])
 
