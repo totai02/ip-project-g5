@@ -5,7 +5,7 @@ from tornado.wsgi import WSGIContainer
 
 from src.extract_math_eq import *
 import base64
-import random
+import uuid
 import json
 
 import os
@@ -20,7 +20,6 @@ def hello_world():
 
 @app.route('/api/classify', methods=['POST'])
 def upload_image():
-    eq_string = ""
     img = None
 
     if request.is_json:
@@ -30,8 +29,7 @@ def upload_image():
         img_format = data["format"]
 
         if img_format == "file":
-            tmp_name = str(random.randint(0, 10000)) + ".jpg"
-            file_path = "tmp_file/" + tmp_name
+            file_path = "tmp_file/" + str(uuid.uuid4())
             with open(file_path, 'wb') as f:
                 f.write(base64.b64decode(img_encode))
 
@@ -39,6 +37,14 @@ def upload_image():
             os.remove(file_path)
         elif img_format == "opencv":
             print("unsupport")
+    else:
+        f = request.files['image']
+        file_path = "tmp_file/" + str(uuid.uuid4())
+        f.save(file_path)
+
+        img = cv2.imread(file_path)
+
+        os.remove(file_path)
 
     eq_string = extract_mat_eq(img)
 
@@ -56,4 +62,4 @@ def server():
 
 
 if __name__ == '__main__':
-    dev_server()
+    server()
