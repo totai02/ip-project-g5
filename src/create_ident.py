@@ -59,17 +59,19 @@ def fn_create_ident(char):
 
             circ_vec = char[sortedvals[0].astype(int), sortedvals[1].astype(int)]
 
-            circ_vec_morph = np.hstack((0, circ_vec[0:-1]))
-            circ_vec_erosion = morphology.binary_erosion(circ_vec_morph, np.ones(2))
-            circ_vec_morph = np.hstack((circ_vec_erosion[1:], circ_vec[-1]))
+            # circ_vec_morph = np.hstack((0, circ_vec[0:-1]))
+            # circ_vec_erosion = morphology.binary_erosion(circ_vec_morph, np.ones(2))
+            # circ_vec_morph = np.hstack((circ_vec_erosion[1:], circ_vec[-1]))
+            #
+            # circ_vec_morph_2 = np.hstack((1, circ_vec_morph[0:-1]))
+            # circ_vec_dilate = morphology.binary_dilation(circ_vec_morph_2, np.ones(2))
+            # circ_vec_morph_2 = np.hstack((circ_vec_dilate[0:-1], circ_vec_morph[-1]))
+            # circ_vec = circ_vec_morph_2
 
-            circ_vec_morph_2 = np.hstack((1, circ_vec_morph[0:-1]))
-            circ_vec_dilate = morphology.binary_dilation(circ_vec_morph_2, np.ones(2))
-            circ_vec_morph_2 = np.hstack((circ_vec_dilate[0:-1], circ_vec_morph[-1]))
-            circ_vec = circ_vec_morph_2
+            circ_vec = morphology.binary_opening(circ_vec, np.ones(2))
 
             if sum(circ_vec) != 0:
-                cnt = str_find(np.hstack((np.ones(2), circ_vec)), np.array([0, 0]))
+                cnt = str_find(np.hstack((np.ones(3), circ_vec)), np.array([0, 0]))
                 count = sum(np.diff(np.hstack((1, cnt))) != 1)
 
                 identifier[i + 1] = count
@@ -77,7 +79,7 @@ def fn_create_ident(char):
                 circ = len(circ_vec)
 
                 if circ_vec[0] == 1 and circ_vec[-1] == 1:
-                    idx = (np.ones_like(circ_vec) - circ_vec).nonzero()[0]
+                    idx = (~circ_vec).nonzero()[0]
                     if len(idx) != 0:
                         idx = idx[-1]
                         circ_vec = np.hstack((circ_vec[idx + 1:], circ_vec[0:idx+1]))

@@ -1,7 +1,6 @@
 from skimage import feature, transform, morphology
-from scipy import stats
+from scipy import stats, misc
 import numpy as np
-import cv2
 
 
 def fn_deskew(bw_img, soften_flag=False):
@@ -20,9 +19,10 @@ def fn_deskew(bw_img, soften_flag=False):
     deskewing_angle = dominant_orientation - np.pi / 2
 
     while abs(deskewing_angle) > np.pi / 4:
-        deskewing_angle = deskewing_angle - np.sign(deskewing_angle) * np.pi / 2
+        deskewing_angle = -deskewing_angle + np.sign(deskewing_angle) * np.pi / 2
 
-    deskew_img = transform.rotate(bw_img, np.rad2deg(deskewing_angle), mode="wrap")
+    deskew_img = misc.imrotate((bw_img == 0).astype(float), np.rad2deg(deskewing_angle))
+    deskew_img = (deskew_img == 0).astype(float)
 
     if soften_flag and abs(deskewing_angle / np.pi * 180) > 5:
         deskew_img = fn_soften_edges(deskew_img, 5)
@@ -33,8 +33,5 @@ def fn_deskew(bw_img, soften_flag=False):
 def fn_soften_edges(bw_img, se_size):
     se = morphology.disk(se_size)
     softened = morphology.opening(bw_img, se)
-    softened = morphology.closing(softened, se)
     return softened
-
-
 

@@ -1,5 +1,4 @@
 from sklearn.neighbors import NearestNeighbors
-import numpy as np
 
 
 def fn_match_character(eq_chars, X_orig, chars, n_nb = 1):
