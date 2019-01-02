@@ -33,6 +33,7 @@ def fn_deskew(bw_img, soften_flag=False):
 def fn_soften_edges(bw_img, se_size):
     se = morphology.disk(se_size)
     softened = morphology.opening(bw_img, se)
+    softened = morphology.closing(softened, se)
     return softened
 
 

@@ -6,7 +6,8 @@ import cv2
 def fn_create_ident(char):
     k = 8
     identifier = np.zeros(2 * k + 6)
-    char_inv = np.ones_like(char) - char
+    char_inv = np.ones(char.shape) - char
+
     pad = 3
     if sum(char_inv[0, :]) == 0:
         char = np.vstack((np.ones((pad, char.shape[1]), dtype=bool), char))
@@ -17,10 +18,9 @@ def fn_create_ident(char):
     if sum(char_inv[:, -1]) == 0:
         char = np.hstack((char, np.ones((char.shape[0], pad), dtype=bool)))
 
-    char_inv = np.ones_like(char) - char
+    char_inv = np.ones(char.shape) - char
 
     n = np.sum(char_inv)
-
     [y, x] = np.where(char_inv)
 
     char_moment = cv2.moments(char_inv.astype(float))
@@ -32,7 +32,7 @@ def fn_create_ident(char):
     identifier[0] = inertia_n2
 
     [y, x] = char.shape
-    dr = max(x - cent_x, cent_x, y - cent_y, cent_y) / (k + 1)
+    dr = max(x - cent_x - 1, cent_x + 1, y - cent_y - 1, cent_y - 1) / (k + 1)
     [c, r] = np.meshgrid(np.arange(0, x), np.arange(0, y))
 
     for i in range(k):
@@ -59,11 +59,17 @@ def fn_create_ident(char):
 
             circ_vec = char[sortedvals[0].astype(int), sortedvals[1].astype(int)]
 
-            circ_vec = morphology.binary_opening(circ_vec, np.ones(2))
-            circ_vec = morphology.binary_closing(circ_vec, np.ones(2))
+            circ_vec_morph = np.hstack((0, circ_vec[0:-1]))
+            circ_vec_erosion = morphology.binary_erosion(circ_vec_morph, np.ones(2))
+            circ_vec_morph = np.hstack((circ_vec_erosion[1:], circ_vec[-1]))
+
+            circ_vec_morph_2 = np.hstack((1, circ_vec_morph[0:-1]))
+            circ_vec_dilate = morphology.binary_dilation(circ_vec_morph_2, np.ones(2))
+            circ_vec_morph_2 = np.hstack((circ_vec_dilate[0:-1], circ_vec_morph[-1]))
+            circ_vec = circ_vec_morph_2
 
             if sum(circ_vec) != 0:
-                cnt = str_find(np.hstack((np.ones(3), circ_vec)), np.array([0, 0]))
+                cnt = str_find(np.hstack((np.ones(2), circ_vec)), np.array([0, 0]))
                 count = sum(np.diff(np.hstack((1, cnt))) != 1)
 
                 identifier[i + 1] = count
@@ -71,10 +77,10 @@ def fn_create_ident(char):
                 circ = len(circ_vec)
 
                 if circ_vec[0] == 1 and circ_vec[-1] == 1:
-                    idx = (~circ_vec).nonzero()[0]
+                    idx = (np.ones_like(circ_vec) - circ_vec).nonzero()[0]
                     if len(idx) != 0:
                         idx = idx[-1]
-                        circ_vec = np.hstack((circ_vec[idx + 1:], circ_vec[0:idx]))
+                        circ_vec = np.hstack((circ_vec[idx + 1:], circ_vec[0:idx+1]))
 
                 B = np.hstack((0, circ_vec, 0))
                 bgrd_len = np.array(np.where(np.diff(B) == -1)) - np.array(np.where(np.diff(B) == 1))
