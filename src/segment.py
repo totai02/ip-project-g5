@@ -6,7 +6,7 @@ Character = np.dtype([('centroid', 'O'), ('boundingbox', 'O'), ('img', 'O'), ('i
 
 
 def fn_segment(eq):
-    eq_inv = ~eq
+    eq_inv = np.ones_like(eq) - eq
     se = np.ones((3, 3))
     exp = morphology.binary_erosion(eq_inv, se)
     eq_edges = np.logical_xor(exp, eq_inv)

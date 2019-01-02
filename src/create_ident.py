@@ -6,7 +6,7 @@ import cv2
 def fn_create_ident(char):
     k = 8
     identifier = np.zeros(2 * k + 6)
-    char_inv = ~char
+    char_inv = np.ones_like(char) - char
     pad = 3
     if sum(char_inv[0, :]) == 0:
         char = np.vstack((np.ones((pad, char.shape[1]), dtype=bool), char))
@@ -17,7 +17,7 @@ def fn_create_ident(char):
     if sum(char_inv[:, -1]) == 0:
         char = np.hstack((char, np.ones((char.shape[0], pad), dtype=bool)))
 
-    char_inv = ~char
+    char_inv = np.ones_like(char) - char
 
     n = np.sum(char_inv)
 
@@ -33,7 +33,7 @@ def fn_create_ident(char):
 
     [y, x] = char.shape
     dr = max(x - cent_x, cent_x, y - cent_y, cent_y) / (k + 1)
-    [c, r] = np.meshgrid(np.arange(1, x+1), np.arange(1, y+1))
+    [c, r] = np.meshgrid(np.arange(0, x), np.arange(0, y))
 
     for i in range(k):
         rad = dr * (i + 1)

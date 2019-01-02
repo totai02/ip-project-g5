@@ -28,5 +28,5 @@ def fn_lighting_compensation(img):
 
     bw_img = ~bw_img
 
-    return bw_img
+    return bw_img.astype(float)
 
