@@ -1,0 +1,16 @@
+infty
+2
+int
+lambda
+d
+6
+3
++
+y
+x
+x
+-
+-
+infty
+-
+y=\int\limits_{-\infty }^{\infty }6x^{2}+3\lambda dx

@@ -43,7 +43,7 @@ def extract_mat_eq(image, show_fig=False):
     # print(fn_create_ident(eq_chars[1]['img']))
     # cv2.waitKey()
 
-    return eq_string
+    return eq_string, eq_chars
 
 
 

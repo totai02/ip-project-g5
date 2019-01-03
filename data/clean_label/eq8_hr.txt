@@ -1,0 +1,14 @@
+x
+mathrm{l}
+.
+y
+mathrm{i}
+mathrm{m}
+-
+-
+-
+x
+0
+\rightarrow
+n
+y=\lim\limits_{n \to 0}\frac{x}{x}

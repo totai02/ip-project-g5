@@ -1,0 +1,8 @@
+X
+B
++
+y
+omega
+-
+-
+y=\omega X+B

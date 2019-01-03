@@ -12,6 +12,10 @@ import os
 
 app = Flask(__name__)
 
+new_dir = "tmp_file/"
+if not os.path.exists(new_dir):
+    os.makedirs(new_dir)
+
 
 @app.route('/')
 def hello_world():

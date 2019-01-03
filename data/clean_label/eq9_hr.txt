@@ -1,0 +1,6 @@
+sqrt
+y
+x
+-
+-
+y=\sqrt{x}

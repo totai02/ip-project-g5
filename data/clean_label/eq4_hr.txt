@@ -1,0 +1,9 @@
+int
+A
+Lambda
+d
+t
+t
+-
+-
+\Lambda =\int At\,dt

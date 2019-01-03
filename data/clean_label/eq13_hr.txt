@@ -1,0 +1,23 @@
+2
+infty
+x
+-
+1
+int
+-
+2
+(
+)
+Q
+d
+z
+e
+x
+-
+-
+-
+sqrt
+2
+pi
+z
+Q(z)=\frac{1}{\sqrt{2\pi }}\int\limits_{z}^{\infty }e^{\frac{-x^{2}}{2}}d\,x
