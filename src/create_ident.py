@@ -1,4 +1,5 @@
-from skimage import morphology, measure
+from skimage import morphology
+from src.hu_moments import *
 import numpy as np
 import cv2
 
@@ -9,13 +10,13 @@ def fn_create_ident(char):
     char_inv = np.ones(char.shape) - char
 
     pad = 3
-    if sum(char_inv[0, :]) == 0:
+    if sum(char_inv[0, :]) != 0:
         char = np.vstack((np.ones((pad, char.shape[1]), dtype=bool), char))
-    if sum(char_inv[-1, :]) == 0:
+    if sum(char_inv[-1, :]) != 0:
         char = np.vstack((char, np.ones((pad, char.shape[1]), dtype=bool)))
-    if sum(char_inv[:, 0]) == 0:
+    if sum(char_inv[:, 0]) != 0:
         char = np.hstack((np.ones((char.shape[0], pad), dtype=bool), char))
-    if sum(char_inv[:, -1]) == 0:
+    if sum(char_inv[:, -1]) != 0:
         char = np.hstack((char, np.ones((char.shape[0], pad), dtype=bool)))
 
     char_inv = np.ones(char.shape) - char
@@ -96,8 +97,8 @@ def fn_create_ident(char):
                 if i > 0:
                     identifier[i + k] = ratio
 
-    char_hu_moment = cv2.HuMoments(char_moment).squeeze()
-    identifier[2*k:] = char_hu_moment[1:]
+    char_hu_moment = cal_hu_moments(char_inv)
+    identifier[2*k:] = char_hu_moment
 
     return identifier
 
