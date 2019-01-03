@@ -11,7 +11,29 @@
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300'>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="../static/js/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".importar").click(function () {
+                let file_data = $$("input[type=file]").files[0];
+                let form_data = new FormData();
+                form_data.append('image', file_data);
+                $.ajax({
+                    type: "post",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    url: "/api/classify",
+                    data: form_data,
+                    success: (result) => {
+                        alert(result)
+                    }
+                });
+            })
+        })
 
+
+    </script>
 
 </head>
 
@@ -30,7 +52,7 @@
             <i class="fa fa-file-text-o pointer-none" aria-hidden="true"></i>
             <p class="pointer-none"><b>Drag and drop</b> files here <br/> or <a href="" id="triggerFile">browse</a> to
                 begin the upload</p>
-            <input type="file" multiple="multiple"/>
+            <input type="file" multiple="multiple" id="image-file"/>
         </div>
         <footer>
             <div class="divider">
@@ -39,7 +61,7 @@
             <div class="list-files">
                 <!--   template   -->
             </div>
-            <button class="importar">UPDATE FILES</button>
+            <button class="importar">UPLOAD FILES</button>
         </footer>
     </div>
 </div>
