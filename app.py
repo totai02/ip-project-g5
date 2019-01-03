@@ -21,7 +21,7 @@ def hello_world():
 @app.route('/api/classify', methods=['POST'])
 def upload_image():
     img = None
-
+    print("new request!!!")
     if request.is_json:
         data = request.get_json()
         if type(data) is str:
@@ -63,4 +63,4 @@ def server():
 
 
 if __name__ == '__main__':
-    dev_server()
+    server()

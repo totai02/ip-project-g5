@@ -9,13 +9,14 @@ def fn_create_ident(char):
     char_inv = np.ones(char.shape) - char
 
     pad = 3
-    if sum(char_inv[0, :]) == 0:
+
+    if sum(char_inv[0, :]) != 0:
         char = np.vstack((np.ones((pad, char.shape[1]), dtype=bool), char))
-    if sum(char_inv[-1, :]) == 0:
+    if sum(char_inv[-1, :]) != 0:
         char = np.vstack((char, np.ones((pad, char.shape[1]), dtype=bool)))
-    if sum(char_inv[:, 0]) == 0:
+    if sum(char_inv[:, 0]) != 0:
         char = np.hstack((np.ones((char.shape[0], pad), dtype=bool), char))
-    if sum(char_inv[:, -1]) == 0:
+    if sum(char_inv[:, -1]) != 0:
         char = np.hstack((char, np.ones((char.shape[0], pad), dtype=bool)))
 
     char_inv = np.ones(char.shape) - char
