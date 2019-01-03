@@ -60,15 +60,7 @@ def fn_create_ident(char):
 
             circ_vec = char[sortedvals[0].astype(int), sortedvals[1].astype(int)]
 
-            # circ_vec_morph = np.hstack((0, circ_vec[0:-1]))
-            # circ_vec_erosion = morphology.binary_erosion(circ_vec_morph, np.ones(2))
-            # circ_vec_morph = np.hstack((circ_vec_erosion[1:], circ_vec[-1]))
-            #
-            # circ_vec_morph_2 = np.hstack((1, circ_vec_morph[0:-1]))
-            # circ_vec_dilate = morphology.binary_dilation(circ_vec_morph_2, np.ones(2))
-            # circ_vec_morph_2 = np.hstack((circ_vec_dilate[0:-1], circ_vec_morph[-1]))
-            # circ_vec = circ_vec_morph_2
-
+            circ_vec = morphology.binary_closing(circ_vec, np.ones(2))
             circ_vec = morphology.binary_opening(circ_vec, np.ones(2))
 
             if sum(circ_vec) != 0:

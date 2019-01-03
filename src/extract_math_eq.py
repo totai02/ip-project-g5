@@ -35,6 +35,14 @@ def extract_mat_eq(image, show_fig=False):
     # Assembled Equation
     eq_string = fn_assemble_eq(eq_chars)
 
+    # for i in range(len(eq_chars)):
+    #     cv2.imshow(str(i), eq_chars[i]['img'])
+    #
+    # cv2.waitKey()
+    #
+    # print(fn_create_ident(eq_chars[1]['img']))
+    # cv2.waitKey()
+
     return eq_string
 
 
