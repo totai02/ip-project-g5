@@ -52,12 +52,12 @@ def upload_image():
 
 
 def dev_server():
-    app.run(debug=True)
+    app.run()
 
 
 def server():
     http_server = HTTPServer(WSGIContainer(app))
-    http_server.listen(5000)
+    http_server.listen(80)
     IOLoop.instance().start()
 
 

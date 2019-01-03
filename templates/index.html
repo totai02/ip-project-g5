@@ -5,28 +5,18 @@
     <meta charset="UTF-8">
     <title>LaTeX Generation from Equation Photograph</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
-    <link rel='stylesheet' href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
-    <link rel='stylesheet' href="{{ url_for('static', filename='css/css.css') }}">
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300'>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#btn-upload").onclick = () => {
-                $.post("/api/classify", $("#image-file"), function (result) {
-                    console.log("ok");
-                });
-            }
-
-        })
-    </script>
 
 </head>
 
 <body>
+
 <div class="upload">
     <div class="upload-files">
         <header>
@@ -40,7 +30,7 @@
             <i class="fa fa-file-text-o pointer-none" aria-hidden="true"></i>
             <p class="pointer-none"><b>Drag and drop</b> files here <br/> or <a href="" id="triggerFile">browse</a> to
                 begin the upload</p>
-            <input type="file" multiple="multiple" id="image-file"/>
+            <input type="file" multiple="multiple"/>
         </div>
         <footer>
             <div class="divider">
@@ -49,11 +39,14 @@
             <div class="list-files">
                 <!--   template   -->
             </div>
-            <button id="btn-upload" class="importar">UPDATE FILES</button>
+            <button class="importar">UPDATE FILES</button>
         </footer>
     </div>
 </div>
+
+
 <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
 
 </body>
 
