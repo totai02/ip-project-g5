@@ -23,8 +23,9 @@ def upload_image():
     img = None
 
     if request.is_json:
-        content = request.get_json()
-        data = json.loads(content)
+        data = request.get_json()
+        if type(data) is str:
+            data = json.loads(data)
         img_encode = data["img_encode"]
         img_format = data["format"]
 
