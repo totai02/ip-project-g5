@@ -1,4 +1,4 @@
-from skimage import morphology
+from skimage import morphology, measure
 import numpy as np
 import cv2
 
@@ -9,14 +9,13 @@ def fn_create_ident(char):
     char_inv = np.ones(char.shape) - char
 
     pad = 3
-
-    if sum(char_inv[0, :]) != 0:
+    if sum(char_inv[0, :]) == 0:
         char = np.vstack((np.ones((pad, char.shape[1]), dtype=bool), char))
-    if sum(char_inv[-1, :]) != 0:
+    if sum(char_inv[-1, :]) == 0:
         char = np.vstack((char, np.ones((pad, char.shape[1]), dtype=bool)))
-    if sum(char_inv[:, 0]) != 0:
+    if sum(char_inv[:, 0]) == 0:
         char = np.hstack((np.ones((char.shape[0], pad), dtype=bool), char))
-    if sum(char_inv[:, -1]) != 0:
+    if sum(char_inv[:, -1]) == 0:
         char = np.hstack((char, np.ones((char.shape[0], pad), dtype=bool)))
 
     char_inv = np.ones(char.shape) - char
@@ -24,7 +23,7 @@ def fn_create_ident(char):
     n = np.sum(char_inv)
     [y, x] = np.where(char_inv)
 
-    char_moment = cv2.moments(char_inv.astype(float))
+    char_moment = cv2.moments(char_inv)
     cent_x = char_moment["m10"] / char_moment["m00"]
     cent_y = char_moment["m01"] / char_moment["m00"]
 
@@ -33,7 +32,7 @@ def fn_create_ident(char):
     identifier[0] = inertia_n2
 
     [y, x] = char.shape
-    dr = max(x - cent_x - 1, cent_x + 1, y - cent_y - 1, cent_y - 1) / (k + 1)
+    dr = max(x - cent_x - 1, cent_x + 1, y - cent_y - 1, cent_y + 1) / (k + 1)
     [c, r] = np.meshgrid(np.arange(0, x), np.arange(0, y))
 
     for i in range(k):
@@ -60,8 +59,8 @@ def fn_create_ident(char):
 
             circ_vec = char[sortedvals[0].astype(int), sortedvals[1].astype(int)]
 
-            circ_vec = morphology.binary_closing(circ_vec, np.ones(2))
             circ_vec = morphology.binary_opening(circ_vec, np.ones(2))
+            circ_vec = morphology.binary_closing(circ_vec, np.ones(2))
 
             if sum(circ_vec) != 0:
                 cnt = str_find(np.hstack((np.ones(3), circ_vec)), np.array([0, 0]))
@@ -86,10 +85,13 @@ def fn_create_ident(char):
                 else:
                     d2 = np.max(bgrd_len)
                     idx_d2 = np.argmax(bgrd_len)
-                    bgrd_len[0, idx_d2] = 0
+                    bgrd_len[0, idx_d2] = -1
                     d1 = np.max(bgrd_len)
 
-                ratio = (d2 - d1) / circ
+                if d1 != -1:
+                    ratio = (d2 - d1) / circ
+                else:
+                    ratio = 0
 
                 if i > 0:
                     identifier[i + k] = ratio

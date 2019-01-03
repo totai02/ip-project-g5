@@ -6,7 +6,7 @@ Character = np.dtype([('centroid', 'O'), ('boundingbox', 'O'), ('img', 'O'), ('i
 
 
 def fn_segment(eq):
-    eq_inv = np.ones_like(eq) - eq
+    eq_inv = np.ones_like(eq) - eq.astype(float)
     se = np.ones((3, 3))
     exp = morphology.binary_erosion(eq_inv, se)
     eq_edges = np.logical_xor(exp, eq_inv)
@@ -26,8 +26,10 @@ def fn_segment(eq):
 
     boundingboxes = np.array([np.array(item.bbox) for item in props])
     boundingboxes = boundingboxes[:, [1, 0, 3, 2]]
-    boundingboxes[:, 2] = boundingboxes[:, 2] - boundingboxes[:, 0]
-    boundingboxes[:, 3] = boundingboxes[:, 3] - boundingboxes[:, 1]
+    boundingboxes[:, 0] = boundingboxes[:, 0] - 1
+    boundingboxes[:, 1] = boundingboxes[:, 1] - 1
+    boundingboxes[:, 2] = boundingboxes[:, 2] - boundingboxes[:, 0] + 2
+    boundingboxes[:, 3] = boundingboxes[:, 3] - boundingboxes[:, 1] + 2
 
     imgs = np.array([np.array(item.image) for item in props])
 

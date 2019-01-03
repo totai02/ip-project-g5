@@ -14,13 +14,13 @@ X_orig = data["X_orig"]
 
 def extract_mat_eq(image, show_fig=False):
     if image is None:
-        return ""
+        return "Image error!"
 
     # Optimize page and binarize
     eq_bin = fn_lighting_compensation(image)
 
     # Deskew Equation
-    eq_deskew = fn_deskew(eq_bin)
+    eq_deskew = fn_deskew(eq_bin, True)
 
     # Segment Equation Characters and Create Identifier
     eq_chars = fn_segment(eq_deskew)
@@ -36,7 +36,7 @@ def extract_mat_eq(image, show_fig=False):
     eq_string = fn_assemble_eq(eq_chars)
 
     # for i in range(len(eq_chars)):
-    #     cv2.imshow(str(i), eq_chars[i]['img'])
+    #     cv2.imshow(str(i), eq_chars[i]['img'].astype(float))
     #
     # cv2.waitKey()
     #
