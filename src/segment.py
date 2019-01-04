@@ -26,8 +26,6 @@ def fn_segment(eq):
 
     boundingboxes = np.array([np.array(item.bbox) for item in props])
     boundingboxes = boundingboxes[:, [1, 0, 3, 2]]
-    # boundingboxes[:, 0] = boundingboxes[:, 0] - 1
-    # boundingboxes[:, 1] = boundingboxes[:, 1] - 1
     boundingboxes[:, 2] = boundingboxes[:, 2] - boundingboxes[:, 0]
     boundingboxes[:, 3] = boundingboxes[:, 3] - boundingboxes[:, 1]
 
