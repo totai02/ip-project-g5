@@ -51,7 +51,7 @@ def upload_image():
 
         os.remove(file_path)
 
-    eq_string = extract_mat_eq(img)
+    eq_string, _ = extract_mat_eq(img)
 
     return eq_string
 
