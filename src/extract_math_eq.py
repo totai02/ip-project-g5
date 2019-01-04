@@ -6,6 +6,8 @@ from src.create_ident import *
 from src.match_character import *
 from src.assemble_eq import *
 import matplotlib.pyplot as plt
+from matplotlib import rc
+rc('text', usetex=True)
 
 data = sio.loadmat("data/chars")
 chars = data['chars']
@@ -19,8 +21,8 @@ def extract_mat_eq(image, show_fig=False):
     if show_fig:
         plt.figure(num=1)
         plt.imshow(image)
-        plt.show(block=False)
         plt.axis("off")
+        plt.show(block=False)
         plt.draw()
         plt.pause(0.001)
 
@@ -79,18 +81,20 @@ def extract_mat_eq(image, show_fig=False):
             plt.title(eq_chars[i]['char'])
             plt.axis("off")
 
-        plt.show()
+        plt.show(block=False)
+        plt.draw()
+        plt.pause(0.001)
 
     # Assembled Equation
     eq_string = fn_assemble_eq(eq_chars)
 
-    # for i in range(len(eq_chars)):
-    #     cv2.imshow(str(i), eq_chars[i]['img'].astype(float))
-    #
-    # cv2.waitKey()
-    #
-    # print(fn_create_ident(eq_chars[1]['img']))
-    # cv2.waitKey()
+    if show_fig:
+        plt.figure(num=7)
+        plt.imshow(image)
+        font_size = round(36 - len(eq_chars) / 3)
+        plt.title(r"$" + eq_string + r"$", fontsize=font_size)
+        plt.axis("off")
+        plt.show()
 
     return eq_string, eq_chars
 

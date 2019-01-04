@@ -67,4 +67,4 @@ def server():
 
 
 if __name__ == '__main__':
-    dev_server()
+    server()
